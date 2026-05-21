@@ -1,0 +1,80 @@
+# Domain profile for reusable QA-agent generation.
+# Copy this into a target repo as qa_agents/domain_profile.yaml and customize.
+
+project:
+  name: purchase_to_pay
+  base_url_default: http://localhost:8000
+  risk_model: financial_integrity
+
+entities:
+  - vendor
+  - purchase_order
+  - receipt
+  - invoice
+  - gl_entry
+
+happy_path:
+  mission: Build one valid end-to-end workflow from seed data or created test data.
+  flow:
+    - discover_or_create_vendor
+    - create_purchase_order
+    - submit_purchase_order
+    - receive_goods
+    - create_invoice
+    - match_invoice
+    - approve_invoice
+    - verify_exposure_or_gl
+
+invariants:
+  - id: overpayment_protection
+    rule: Invoice amount must not exceed received goods value.
+    severity: critical
+    probes:
+      - one_cent_overage
+      - full_invoice_against_partial_receipt
+      - multi_line_line_level_overage
+  - id: three_way_match_gate
+    rule: Invoice cannot approve unless PO, receipt, and invoice match.
+    severity: critical
+    probes:
+      - approve_unmatched_invoice
+      - mass_assign_matched_true
+  - id: partial_receipt_flag
+    rule: Partial receipts must be visible and must not silently permit full invoice approval.
+    severity: high
+    probes:
+      - receive_half_invoice_full
+  - id: inactive_vendor_gate
+    rule: Inactive vendors cannot be used for new payable workflows.
+    severity: high
+    probes:
+      - create_po_for_inactive_vendor
+  - id: gl_balance
+    rule: Posted GL entries must balance debits and credits.
+    severity: critical
+    probes:
+      - approve_invoice_check_gl_balance
+  - id: duplicate_invoice_detection
+    rule: Same vendor and invoice number cannot be paid twice.
+    severity: critical
+    probes:
+      - duplicate_exact
+      - duplicate_case_variant
+      - duplicate_whitespace_variant
+
+judge_policy:
+  statuses: [HELD, BREACHED, INCONCLUSIVE]
+  held_requires:
+    - clean_rejection_or_explicit_safe_status
+    - state_verification_when_endpoint_exists
+  never_treat_as_clean_held:
+    - http_500
+    - timeout
+    - ambiguous_success
+
+safety:
+  allowed_target_hosts:
+    - localhost
+    - 127.0.0.1
+  unique_test_prefix: QA_AGENT
+  max_schema_retries_per_endpoint: 3
