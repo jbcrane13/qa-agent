@@ -1,3 +1,8 @@
+---
+description: Run eval_report.py against a QA report.json and summarize failures
+argument-hint: [report-path]
+---
+
 # Run P2P QA Agent Evals
 
 Argument: `$ARGUMENTS` is the report path, default `report.json`.

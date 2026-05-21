@@ -1,13 +1,27 @@
 #!/usr/bin/env python3
-import json, os, sys
-raw = os.environ.get('CLAUDE_TOOL_INPUT', '{}')
+"""PreToolUse(Read|Write|Edit) guardrail. Reads Claude Code hook JSON from stdin
+and blocks operations touching obvious secret-file patterns."""
+import json
+import sys
+
+SECRET_TOKENS = (".env", "id_rsa", "id_ed25519", "secrets.json")
+
 try:
-    data = json.loads(raw)
+    payload = json.load(sys.stdin)
 except Exception:
-    data = {}
-text = str(data)
-for token in ['.env', 'id_rsa', 'id_ed25519', 'secrets.json']:
+    sys.exit(0)
+
+tool_input = payload.get("tool_input") or {}
+# Check the fields the file tools actually use: file_path (Read/Write/Edit),
+# plus content/old_string/new_string for completeness.
+text = " ".join(
+    str(tool_input.get(k) or "")
+    for k in ("file_path", "path", "content", "old_string", "new_string")
+)
+
+for token in SECRET_TOKENS:
     if token in text:
-        print(f'Blocked by qa-agent guardrail: secret file pattern {token}')
+        print(f"Blocked by qa-agent guardrail: secret file pattern {token}", file=sys.stderr)
         sys.exit(2)
+
 sys.exit(0)

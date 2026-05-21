@@ -1,4 +1,5 @@
 ---
+name: judge-evals
 description: Use when creating evals and judge checks for API QA agent reports.
 ---
 

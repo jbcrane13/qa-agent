@@ -1,4 +1,5 @@
 ---
+name: adversarial-financial-agent
 description: Use when building the adversarial financial-integrity agent for P2P APIs.
 ---
 

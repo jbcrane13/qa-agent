@@ -1,4 +1,5 @@
 ---
+name: qa-agent-factory
 description: Use when asked to quickly create a QA agent for an API from project rules, reusable prompts, skills, memory/context files, evals, test harnesses, and guardrails.
 ---
 

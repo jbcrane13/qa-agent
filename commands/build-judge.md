@@ -1,3 +1,7 @@
+---
+description: Build the QA judge that grades explorer + adversarial reports against the domain profile and emits report.json
+---
+
 # Build P2P QA Judge Agent
 
 Create a **separate** `qa_agents/p2p_judge.py` using Claude Agent SDK or deterministic Python checks plus an optional Claude reasoning pass.

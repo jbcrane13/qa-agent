@@ -1,3 +1,8 @@
+---
+description: Build the adversarial financial-integrity agent that attacks invariants from the domain profile
+argument-hint: [base-url]
+---
+
 # Build P2P Financial Adversarial Agent
 
 Argument: `$ARGUMENTS` is the base URL, default `http://localhost:8000`.

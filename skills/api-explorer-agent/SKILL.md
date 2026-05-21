@@ -1,4 +1,5 @@
 ---
+name: api-explorer-agent
 description: Use when building the happy-path API explorer agent for the P2P challenge.
 ---
 

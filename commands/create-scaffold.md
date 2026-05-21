@@ -1,3 +1,8 @@
+---
+description: Scaffold a reusable QA-agent harness (domain profile, agent contracts, api tool, evals) into the current repo
+argument-hint: [domain-name]
+---
+
 # Create Reusable QA Agent Scaffold
 
 Argument: `$ARGUMENTS` is the domain name, default `api_domain`.

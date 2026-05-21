@@ -1,3 +1,8 @@
+---
+description: Build the happy-path API explorer agent (api_tool + explorer) using Claude Agent SDK against a base URL
+argument-hint: [base-url]
+---
+
 # Build P2P API Explorer Agent
 
 Argument: `$ARGUMENTS` is the base URL, default `http://localhost:8000`.

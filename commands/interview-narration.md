@@ -1,3 +1,7 @@
+---
+description: Interview narration cheat sheet — translate QA-agent buzzwords to engineering behavior
+---
+
 # Interview Narration Cheat Sheet
 
 Use this when asked to explain the workflow.
