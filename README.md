@@ -6,21 +6,26 @@ A Claude Code plugin marketplace hosting **qa-agent**: a reusable QA-agent facto
 
 ## Install
 
-```bash
-# Add this repo as a marketplace
-/plugin marketplace add jbcrane13/qa-agent
+Run these inside Claude Code, one command at a time:
 
-# Install the plugin
+```text
+/plugin marketplace add jbcrane13/qa-agent
 /plugin install qa-agent@qa-agent
 ```
 
-Restart Claude Code, then verify with `/plugin list` — you should see `qa-agent` enabled.
+Restart Claude Code, then verify:
+
+```text
+/plugin list
+```
+
+You should see `qa-agent` enabled.
 
 ## What's inside
 
 | Component | Path | Purpose |
 |-----------|------|---------|
-| Commands | `commands/` | `/create-scaffold`, `/build-explorer`, `/build-adversary`, `/build-judge`, `/build-evals`, `/run-evals`, `/interview-narration` |
+| Commands | `commands/` | `/qa-agent:create-scaffold`, `/qa-agent:build-explorer`, `/qa-agent:build-adversary`, `/qa-agent:build-judge`, `/qa-agent:build-evals`, `/qa-agent:run-evals`, `/qa-agent:interview-narration` |
 | Agents | `agents/` | `api-explorer`, `invariant-adversary`, `qa-judge` — specialized subagents |
 | Skills | `skills/` | `qa-agent-factory`, `api-explorer-agent`, `adversarial-financial-agent`, `judge-evals` |
 | Hooks | `hooks/hooks.json` | `PreToolUse` guards on `Bash` and `Read`/`Write`/`Edit` |
@@ -30,34 +35,74 @@ Restart Claude Code, then verify with `/plugin list` — you should see `qa-agen
 
 ## Quick start
 
-After installing:
+After installing, run these inside the API repo you want to test.
 
 1. **Scaffold a QA harness** in your repo:
+   ```text
+   /qa-agent:create-scaffold <your-domain>
    ```
-   /create-scaffold <your-domain>
-   ```
-2. **Edit `qa_agents/domain_profile.yaml`** to describe entities, workflow, invariants, and judge policy.
+
+2. **Edit `qa_agents/domain_profile.yaml`** to describe the target API:
+   - entities
+   - happy-path workflow
+   - invariants / business rules
+   - judge policy
+   - safety settings
+
 3. **Build the agents**:
+   ```text
+   /qa-agent:build-explorer  http://localhost:8000
+   /qa-agent:build-adversary http://localhost:8000
+   /qa-agent:build-judge
+   /qa-agent:build-evals
    ```
-   /build-explorer  http://localhost:8000
-   /build-adversary http://localhost:8000
-   /build-judge
-   /build-evals
+
+4. **Run evals against the final report**:
+   ```text
+   /qa-agent:run-evals report.json
    ```
-4. **Run evals against a report**:
-   ```
-   /run-evals report.json
-   ```
+
+## Example: Purchase-to-Pay practice flow
+
+```text
+/qa-agent:interview-narration
+/qa-agent:create-scaffold purchase_to_pay
+/qa-agent:build-explorer http://localhost:8000
+/qa-agent:build-adversary http://localhost:8000
+/qa-agent:build-judge
+/qa-agent:build-evals
+/qa-agent:run-evals report.json
+```
 
 ## How it works
 
-The plugin enforces a seven-layer agent contract: mission/invariant, narrow tools, evidence log, role split (explorer vs. adversary vs. judge), domain profile, evals, and guardrails. See `templates/agent_contracts.md` and `skills/qa-agent-factory/SKILL.md`.
+The plugin enforces a seven-layer agent contract:
 
-Guardrail hooks block obviously unsafe bash and file operations via `scripts/guard_bash.py` and `scripts/guard_files.py`.
+1. Mission / invariant
+2. Narrow tools
+3. Evidence log
+4. Role split: explorer, adversary, judge
+5. Domain profile
+6. Evals
+7. Guardrails
+
+See:
+
+```text
+templates/agent_contracts.md
+skills/qa-agent-factory/SKILL.md
+```
+
+Guardrail hooks block obviously unsafe bash and file operations via:
+
+```text
+scripts/guard_bash.py
+scripts/guard_files.py
+```
 
 ## Repository layout
 
-```
+```text
 .
 ├── .claude-plugin/
 │   ├── plugin.json          # Plugin manifest
