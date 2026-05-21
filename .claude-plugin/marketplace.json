@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "qa-agent",
+  "description": "Marketplace hosting the qa-agent plugin: a reusable Claude Code QA-agent factory for API exploration, adversarial invariant testing, evidence judging, and evals.",
+  "owner": {
+    "name": "Blake Crane",
+    "url": "https://github.com/jbcrane13"
+  },
+  "plugins": [
+    {
+      "name": "qa-agent",
+      "source": "./",
+      "description": "Reusable Claude Code QA-agent factory: API exploration, adversarial invariant testing, evidence judging, evals, and guardrails.",
+      "version": "1.0.0",
+      "author": { "name": "Blake Crane" },
+      "license": "MIT",
+      "homepage": "https://github.com/jbcrane13/qa-agent",
+      "keywords": ["qa", "testing", "adversarial", "evals", "api", "guardrails"],
+      "category": "testing"
+    }
+  ]
+}
